@@ -47,8 +47,10 @@ cloudinary.config(
 oauth = OAuth(app)
 google = oauth.register(
     name='google',
-    client_id='884325304780-tu9b97m07oed9dsvu61gv4lhq3k85905.apps.googleusercontent.com',
-    client_secret='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',
+    # client_id='884325304780-tu9b97m07oed9dsvu61gv4lhq3k85905.apps.googleusercontent.com',
+    client_id='853416967262-2tj4veftl34oseq1jrir94lru2pstb6a.apps.googleusercontent.com',
+    # client_secret='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',
+    client_secret='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',
     access_token_url='https://accounts.google.com/o/oauth2/token',
     access_token_params=None,
     authorize_url='https://accounts.google.com/o/oauth2/auth',
