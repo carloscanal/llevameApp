@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block title %}Mis vehículos{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+    {% block content %}
+
+
+    <div class="hero-wrap ftco-degree-bg" style="background-image: url('/static/images/miscoches.png');" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text justify-content-start align-items-center justify-content-center">
+          <div class="col-lg-8 ftco-animate">
+          	<div class="text w-100 text-center mb-md-6 pb-md-5">
+	            <h1 class="mb-4 sombrita">Revise sus coches</h1>
+	            <p class="sombrita2" style="font-size: 18px;">Puede observar la información necesaria de cualquiera de sus coches, como modelo, marca, tipo, color,... También puede gestionar sus coches para futuros viajes.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <section class="ftco-section ftco-no-pt bg-light">
+    	<div class="container">
+    		<div class="row no-gutters">
+    			<div class="col-md-12	featured-top">
+    				<div class="row no-gutters">
+	  					<div class="col-md-12 d-flex align-items-center">
+	  						<div class="services-wrap2 rounded-right w-100">
+	  							<h3 class="heading-section mb-2">¿Desea crear un nuevo coche para sus futuros trayectos?</h3>
+                  Si desea insertar un vehículo en su perfil para viajar con él en futuros trayectos, seleccione la siguiente opción.
+                  <div class="mt-4 mb-3 botonCentrado">
+                    <form action="{{ url_for('insertar_coche_c') }}" method="post" >
+                      <input type="submit" class="btn btn-primary py-3 px-4" value="Añadir coche"/>
+                    </form>
+                  </div>
+	  						</div>
+	  					</div>
+	  				</div>
+				</div>
+  		</div>
+      </div>
+    </section>
+
+    <section class="ftco-section ftco-no-pt bg-light">
+        <div class="container">
+        <div class="row justify-content-center">
+      <div class="col-md-12 mt-5 heading-section text-center ftco-animate mb-4">
+        <h2 class="mb-2">Mis coches</h2>
+      </div>
+    </div>
+<div class="row">
+            {% if usuario.coches|length == 0 %}
+                <div class="col-md-12">
+    				<div class="car-wrap rounded ftco-animate">
+                        <div class="text" style="background-color: #e3f0f8;">
+                            <p class="d-flex mb-0 mt-1 justify-content-center">
+                                <b>No dispones aún de coches</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+            {% set vars = {'cont': 0} %}
+                {% for coche in usuario.coches %}
+<div class="col-md-12">
+            <div class="car-wrap rounded ftco-animate">
+              <div class="row">
+                <div class="col-md-6">
+                  	<div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                <i class="fas fa-car"></i><b> Marca y modelo</b>
+              </div>
+              <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                {{ coche["marca"] }} {{ coche["modelo"] }}
+              </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                    <i class="fas fa-tag"></i><b> Tipo</b>
+                  </div>
+                  <div class="tarjetaTrayectoDatos" style="overflow: hidden;">
+                    {{ coche["tipo"] }}
+                  </div>
+                </div>
+              <div class="col-md-3">
+                  <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                      <i class="fas fa-tint"></i><b> Color</b>
+                  </div>
+                  <div class="tarjetaTrayectoDatos" style="overflow: hidden;">
+                    {{ coche["color"] }}
+                  </div>
+                </div>
+              </div>
+                <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                    <i class="fas fa-info-circle"></i><b> Descripción</b>
+              </div>
+              <div class="tarjetaTrayectoDatos" style="overflow: hidden;">
+                {% if coche["descripcion"]|length == 0 %}
+                  No hay descripción para este vehículo.
+                  {% else %}
+                  {{ coche["descripcion"] }}
+                  {% endif %}
+              </div>
+                <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                <i class="fas fa-images"></i><b> Imagen</b>
+              </div>
+              <div class="tarjetaTrayectoDatos" style="padding-bottom: 15px;">
+                {% if coche["fotografia"]|length == 0 %}
+                  No dispone de imagen este vehículo.
+                  {% else %}
+                    <img src="{{ coche["fotografia"] }}" class="img-resize rounded"/>
+                  {% endif %}
+              </div>
+                <div class="text" style="background-color: #e3f0f8;">
+    						<div class="d-flex mb-0 mt-1 justify-content-center">
+                    <form action="{{ url_for('editar_coche_c') }}" method="post">
+                        <input type="hidden" name="id_coche" value="{{ coche["_id"] }}">
+                        <td><input type="submit" class="btn btn-secondary py-2 mr-3" value="Editar"></td>
+                    </form>
+                    {% set idModal = 'myModalCdelete' + vars.cont|string %}
+                    <button type="button" class="btn btn-danger py-2 ml-2" data-toggle="modal" data-target="{{ '#'+idModal }}">Eliminar</button>
+                </div>
+
+                
+
+    					</div>
+    				</div>
+    			</div>
+          <div id="{{ idModal }}" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+          
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">¿Desea borrar este coche?</h4>
+                </div>
+                <div class="modal-body">
+                  <p>Si elimina este coche, su información desaparecerá de los trayectos en los que esté como vehículo. Esta acción no podrá ser revertida.</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+                  <form action="{{ url_for('eliminar_coche_c') }}" method="post">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                    <input type="hidden" name="id_coche" value="{{ coche["_id"] }}">
+                  </form>
+                </div>
+              </div>
+          
+            </div>
+          </div>
+          {% if vars.update({'cont': vars.cont + 1}) %} {% endif %}
+                {% endfor %}
+                
+            {% endif %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

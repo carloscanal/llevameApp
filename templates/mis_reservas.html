@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+{% block title %}Mis reservas{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+    
+    {% block content %}
+    <div class="hero-wrap ftco-degree-bg" style="background-image: url('/static/images/misreservas2.png');" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text justify-content-start align-items-center justify-content-center">
+          <div class="col-lg-8 ftco-animate">
+          	<div class="text w-100 text-center mb-md-6 pb-md-5">
+	            <h1 class="mb-4 sombrita">Revise sus reservas</h1>
+	            <p class="sombrita2" style="font-size: 18px;">Puede observar la información necesaria de cualquier reserva, como número de asientos reservados, origen, destino, conductor, fecha del trayecto, entre otros. También puede gestionar reservas para futuros viajes.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="ftco-section ftco-no-pt bg-light">
+    	<div class="container">
+    		<div class="row no-gutters">
+    			<div class="col-md-12	featured-top">
+    				<div class="row no-gutters">
+	  					<div class="col-md-12 d-flex align-items-center">
+	  						<div class="services-wrap2 rounded-right w-100">
+	  							<h3 class="heading-section mb-2">¿Desea realizar una nueva reserva en algún trayecto?</h3>
+                  Si desea obtener una reserva en un trayecto existente de entre los publicados por los demás usuarios, puede hacerlo seleccionando la opción siguiente.
+                  <div class="mt-4 mb-3 botonCentrado">
+                    <form action="{{ url_for('index') }}" method="get" >
+                      <input type="submit" class="btn btn-primary py-3 px-4" value="Ver trayectos disponibles"/>
+                    </form>
+                  </div>
+	  						</div>
+	  					</div>
+	  				</div>
+				</div>
+  		</div>
+      </div>
+    </section>
+    <section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+      <div class="col-md-12 mt-5 heading-section text-center ftco-animate mb-4">
+        <h2 class="mb-2">Sus reservas para futuros viajes</h2>
+      </div>
+    </div>
+            <div class="row">
+            {% if reservas_futuro|length == 0 %}
+                <div class="col-md-12">
+    				<div class="car-wrap rounded ftco-animate">
+                        <div class="text" style="background-color: #e3f0f8;">
+                            <p class="d-flex mb-0 mt-1 justify-content-center">
+                                <b>No dispones de reservas para próximos viajes.</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+            {% set vars = {'cont': 0} %}
+          {% for reserva in reservas_futuro %}
+          <div class="col-md-12">
+    				<div class="car-wrap rounded ftco-animate">
+              <div class="row">
+                <div class="col-md-6">
+                  	<div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                <i class="fas fa-map-marker-alt"></i> <b>Origen</b>
+              </div>
+              <div class="tarjetaTrayectoDatos" style="overflow: hidden;">
+                {{ reserva["origen"] }}
+              </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                    <i class="fas fa-flag"></i><b> Destino</b>
+                  </div>
+                  <div class="tarjetaTrayectoDatos" style="overflow: hidden;">
+                    {{ reserva["destino"] }}
+                  </div>
+                </div>
+              </div>
+             <!-- <div class="text" style="padding: 10px 30px 1px;"></div>-->
+
+             <div class="row">
+              <div class="col-md-28">
+                <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                  <i class="far fa-calendar-alt"></i><b> Fecha y hora</b>
+                </div>
+                <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                  {{ reserva["fechaTrayecto"].strftime('%d/%m/%Y') }} a las {{ reserva["fechaTrayecto"].strftime('%H:%M') }}
+                </div>
+              </div>
+
+              <div class="col-md-2nuevo">
+                <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                  <i class="fas fa-coins"></i><b> Precio</b>
+                </div>
+                <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                  {{ reserva["precio"] }}€
+                </div>
+              </div>
+
+              <div class="col-md-25">
+                <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                  <i class="fas fa-people-arrows"></i><b> Plazas</b>
+                </div>
+                <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                  {{ reserva["plazasReservadas"] }}
+                </div>
+              </div>
+
+              <div class="col-md-58">
+                <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                  <i class="fas fa-car"></i><b> Vehículo</b>
+                </div>
+                <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                  {% if reserva["coche"]["_id"] is defined %}
+                  {{ reserva["coche"]["marca"] }} {{ reserva["coche"]["modelo"] }}
+                  {% else %}
+                  Vehículo inexistente
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+              <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                <i class="fas fa-file-alt"></i><b> Descripción</b>
+              </div>
+              <div class="tarjetaTrayectoDatos" style="overflow: hidden;">
+                {{ reserva["descripcion"] }}
+              </div>
+                 <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                <i class="fas fa-user-tie"></i><b> Conductor</b>
+              </div>
+              <div class="tarjetaTrayectoDatos desbordamientoTexto" style="padding-bottom: 13px;">
+              <a href="{{ url_for('get_usuario_c', id_usuario=reserva["conductor"]["_id"]) }}">{{ reserva["conductor"]["nombre"] }} {{ reserva["conductor"]["apellidos"] }}</a>
+
+                  {% if reserva["nValoraciones"] == 0  %}
+                      Este usuario no ha recibido aún ninguna valoración.
+                  {% elif reserva["nValoraciones"] > 1 %}
+                      con una de media en valoraciones de {{ reserva["mediaValoraciones"] }}/5 de {{ reserva["nValoraciones"] }} valoraciones recibidas.
+                  {% else %}
+                      dispone de 1 valoración con una puntuación de {{ reserva["mediaValoraciones"] }}/5.
+                  {% endif %}
+              </div>
+                    <div class="text" style="background-color: #e3f0f8;">
+                        <div class="d-flex mb-0 mt-1 justify-content-center">
+                            <form action="{{ url_for('editar_reserva_c',id_reserva=reserva["_id"]) }}" method="post">
+                                <td><input type="submit" class="btn btn-secondary py-2 mr-3" value="Modificar"></td>
+                            </form>
+                            {% set idModal = 'myModalRdelete' + vars.cont|string %}
+                            <button type="button" class="btn btn-danger py-2 ml-2" data-toggle="modal" data-target="{{ '#'+idModal }}">Cancelar</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div id="{{ idModal }}" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+            
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">¿Desea cancelar esta reserva?</h4>
+                  </div>
+                  <div class="modal-body">
+                    <p>Si borra la reserva, ya no podrá ir en este viaje. Esta acción no podrá ser revertida, deberá reservar de nuevo.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+                    <form action="{{ url_for('eliminar_reserva_c',id_reserva=reserva["_id"]) }}" method="post">
+                      <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                  </div>
+                </div>
+            
+              </div>
+            </div>
+            {% if vars.update({'cont': vars.cont + 1}) %} {% endif %}
+      {% endfor %}
+    {% endif %}
+        </div>
+      </div>
+    </section>
+
+
+    <section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+      <div class="col-md-12 mt-5 heading-section text-center ftco-animate mb-4">
+        <h2 class="mb-2">Sus reservas pasadas</h2>
+      </div>
+    </div>
+            <div class="row">
+            {% if reservas_pasado|length == 0 %}
+                <div class="col-md-12">
+    				<div class="car-wrap rounded ftco-animate">
+                        <div class="text" style="background-color: #e3f0f8;">
+                            <p class="d-flex mb-0 mt-1 justify-content-center">
+                                <b>No dispones de reservas cumplidas.</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+          {% for reserva in reservas_pasado %}
+          <div class="col-md-12">
+    				<div class="car-wrap rounded ftco-animate">
+              <div class="row">
+                <div class="col-md-6">
+                  	<div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                <i class="fas fa-map-marker-alt"></i> <b>Origen</b>
+              </div>
+              <div class="tarjetaTrayectoDatos" style="overflow: hidden;">
+                {{ reserva["origen"] }}
+              </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                    <i class="fas fa-flag"></i><b> Destino</b>
+                  </div>
+                  <div class="tarjetaTrayectoDatos" style="overflow: hidden;">
+                    {{ reserva["destino"] }}
+                  </div>
+                </div>
+              </div>
+             <!-- <div class="text" style="padding: 10px 30px 1px;"></div>-->
+
+             <div class="row">
+              <div class="col-md-28">
+                <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                  <i class="far fa-calendar-alt"></i><b> Fecha y hora</b>
+                </div>
+                <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                  {{ reserva["fechaTrayecto"].strftime('%d/%m/%Y') }} a las {{ reserva["fechaTrayecto"].strftime('%H:%M') }}
+                </div>
+              </div>
+
+              <div class="col-md-2nuevo">
+                <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                  <i class="fas fa-coins"></i><b> Precio</b>
+                </div>
+                <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                  {{ reserva["precio"] }}€
+                </div>
+              </div>
+
+              <div class="col-md-25">
+                <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                  <i class="fas fa-people-arrows"></i><b> Plazas</b>
+                </div>
+                <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                  {{ reserva["plazasReservadas"] }}
+                </div>
+              </div>
+
+              <div class="col-md-58">
+                <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                  <i class="fas fa-car"></i><b> Vehículo</b>
+                </div>
+                <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                  {% if reserva["coche"]["_id"] is defined %}
+                  {{ reserva["coche"]["marca"] }} {{ reserva["coche"]["modelo"] }}
+                  {% else %}
+                  Vehículo inexistente
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+              <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                <i class="fas fa-file-alt"></i><b> Descripción</b>
+              </div>
+              <div class="tarjetaTrayectoDatos" style="overflow: hidden;">
+                {{ reserva["descripcion"] }}
+              </div>
+                 <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                <i class="fas fa-user-tie"></i><b> Conductor</b>
+              </div>
+              <div class="tarjetaTrayectoDatos desbordamientoTexto" style="padding-bottom: 13px;">
+              <a href="{{ url_for('get_usuario_c', id_usuario=reserva["conductor"]["_id"]) }}">{{ reserva["conductor"]["nombre"] }} {{ reserva["conductor"]["apellidos"] }}</a>
+                  {% if reserva["nValoraciones"] == 0  %}
+                      Este usuario no ha recibido aún ninguna valoración.
+                  {% elif reserva["nValoraciones"] > 1 %}
+                      con una de media en valoraciones de {{ reserva["mediaValoraciones"] }}/5 de {{ reserva["nValoraciones"] }} valoraciones recibidas.
+                  {% else %}
+                      dispone de 1 valoración con una puntuación de {{ reserva["mediaValoraciones"] }}/5.
+                  {% endif %}
+              </div>
+                     {% if reserva["valorado"] == False %}
+                    <form action="{{ url_for('enviar_valoracion_c', id_valorador=reserva["solicitante"], id_valorado=reserva["conductor"]["_id"], id_reserva=reserva["_id"])}}" method="post" >
+                        <div class="text" style="background-color: #e3f0f8;">
+                            <p class="d-flex mb-0 mt-1 justify-content-center">
+                                <input type="hidden" name="tipo" value="conductor">
+                                <input type="submit" class="btn btn-success py-2 mr-3" value="Valorar">
+                            </p>
+                        </div>
+                    </form>
+                     {% else %}
+                        <div class="text" style="background-color: #e3f0f8;">
+    						<p class="d-flex mb-0 mt-1 justify-content-center">
+                                <b>Ya has valorado este trayecto.</b>
+                            </p>
+    					</div>
+                    {% endif %}
+    				</div>
+    			</div>
+          {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </section>
+{% endblock %}

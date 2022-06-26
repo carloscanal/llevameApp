@@ -1,0 +1,346 @@
+{% extends "base.html" %}
+{% block title %}Mis trayectos{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+    
+{% block content %}
+    <div class="hero-wrap ftco-degree-bg" style="background-image: url('/static/images/inicio2.png');" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text justify-content-start align-items-center justify-content-center">
+          <div class="col-lg-8 ftco-animate">
+          	<div class="text w-100 text-center mb-md-6 pb-md-5">
+	            <h1 class="mb-4 sombrita">Navegue por sus trayectos</h1>
+	            <p class="sombrita2" style="font-size: 18px;">Consulte la información de todos los trayectos creados por usted, ya sean vigentes o hayan finalizado en el tiempo. Edite la información de aquellos vigentes que desee o elimínelos.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="ftco-section ftco-no-pt bg-light">
+    	<div class="container">
+    		<div class="row no-gutters">
+    			<div class="col-md-12	featured-top">
+    				<div class="row no-gutters">
+	  					<div class="col-md-12 d-flex align-items-center">
+	  						<div class="services-wrap2 rounded-right w-100">
+	  							<h3 class="heading-section mb-2">¿Desea publicar un nuevo trayecto?</h3>
+                  Si desea crear un nuevo trayecto para que los demás usuarios puedan visualizarlo y reservar plaza en él, puedes hacerlo
+                  seleccionando la opción siguiente, y será redirigido al formulario de publicación de un nuevo trayecto, donde podrá cumplimentar
+                  todos los campos necesarios para ofertar su viaje.
+                  <div class="mt-4 mb-3 botonCentrado">
+                    <form action="{{ url_for('crear_trayecto_c') }}" method="post" >
+                      <input type="submit" class="btn btn-primary py-3 px-4" value="Crear trayecto"/>
+                    </form>
+                  </div>
+	  						</div>
+	  					</div>
+	  				</div>
+				</div>
+  		</div>
+      </div>
+    </section>
+
+    <section class="ftco-section ftco-no-pt bg-light">
+    	<div class="container">
+    		<div class="row justify-content-center">
+          <div class="col-md-12 mt-5 heading-section text-center ftco-animate mb-4">
+            <h2 class="mb-2">Sus trayectos disponibles</h2>
+          </div>
+        </div>
+
+
+        <div class="row">
+          {% if trayectos_disp|length == 0 %}
+          <div class="col-md-12">
+    				<div class="car-wrap rounded ftco-animate">
+                        <div class="text" style="background-color: #e3f0f8;">
+                            <p class="d-flex mb-0 mt-1 justify-content-center">
+                                <b>No tienes trayectos a futuro.</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+          {% else %}
+          {% set vars = {'cont': 0} %}
+          {% for trayecto in trayectos_disp %}
+          {% if trayecto.fechaHora >= fecha_actual %}
+          <div class="col-md-12">
+    				<div class="car-wrap rounded ftco-animate">
+              <div class="row">
+                <div class="col-md-6">
+                  	<div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                <i class="fas fa-map-marker-alt"></i> <b>Origen</b>
+              </div>
+              <div class="tarjetaTrayectoDatos" style="overflow: hidden;">
+                {{ trayecto.direccionOrigen }} 
+              </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                    <i class="fas fa-flag"></i><b> Destino</b>
+                  </div>
+                  <div class="tarjetaTrayectoDatos" style="overflow: hidden;">
+                    {{ trayecto.direccionDestino }}
+                  </div>
+                </div>
+              </div>
+             <!-- <div class="text" style="padding: 10px 30px 1px;"></div>-->
+    				
+             <div class="row">
+              <div class="col-md-28">
+                <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                  <i class="far fa-calendar-alt"></i><b> Fecha y hora</b>
+                </div>
+                <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                  {{ trayecto.fechaHora.strftime('%d/%m/%Y') }} a las {{ trayecto.fechaHora.strftime('%H:%M') }}
+                </div>
+              </div>
+
+              <div class="col-md-2nuevo">
+                <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                  <i class="fas fa-coins"></i><b> Precio</b>
+                </div>
+                <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                  {{ trayecto.precio }}€
+                </div>
+              </div>
+
+              <div class="col-md-25">
+                <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                  <i class="fas fa-people-arrows"></i><b> Plazas libres</b>
+                </div>
+                <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                  {{ trayecto.plazasDisponibles }}
+                </div>
+              </div>
+
+              <div class="col-md-58">
+                <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                  <i class="fas fa-car"></i><b> Vehículo</b>
+                </div>
+                <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                  {% if trayecto.coche["_id"] is defined %}
+                  {{ trayecto.coche["marca"] }} {{ trayecto.coche["modelo"] }}
+                  {% else %}
+                  Vehículo inexistente
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+              
+              <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                <i class="fas fa-file-alt"></i><b> Descripción</b>
+              </div>
+              <div class="tarjetaTrayectoDatos" style="overflow: hidden;">
+                {{ trayecto.descripcion }}
+              </div>
+
+              <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                <i class="fas fa-user-friends"></i><b> Pasajeros</b>
+              </div>
+              <div class="tarjetaTrayectoDatos desbordamientoTexto" style="padding-bottom: 13px;">
+                {% if trayecto.reservas|length == 0 %}
+                Ningún pasajero ha reservado plaza en este trayecto
+
+                {% else %}
+                {% for reserva in trayecto.reservas %}
+                &nbsp;&nbsp;<i class="far fa-dot-circle" style="color: #1089ff;"></i> <a href="{{ url_for('get_usuario_c', id_usuario=reserva.solicitante.id) }}">{{ reserva.solicitante.nombre }} {{ reserva.solicitante.apellidos }}</a> reservó <b>{{ reserva.plazasReservadas }}</b>
+                {% if reserva.plazasReservadas|int == 1 %} <b>plaza</b> {% else %} <b>plazas</b> {% endif %} el día {{ reserva.fechaReserva.strftime('%d/%m/%Y') }} a las {{ reserva.fechaReserva.strftime('%H:%M') }}. </br>
+                {% endfor %}
+                {% endif %}
+              </div>
+
+
+    					<div class="text" style="background-color: #e3f0f8;">
+    						<div class="d-flex mb-0 mt-1 justify-content-center">
+                  <form action="{{ url_for('actualizar_trayecto_c') }}" method="post">
+                    <input type="submit" class="btn btn-secondary py-2 mr-3" value="Editar trayecto" />
+                    <input type="hidden" name="id_trayecto" value="{{ trayecto.id }}">
+                  </form>
+                  {% set idModal = 'myModalTdelete' + vars.cont|string %}
+                    <button type="button" class="btn btn-danger py-2 ml-2 mr-3" data-toggle="modal" data-target="{{ '#'+idModal }}">Eliminar trayecto</button>
+                  <a class="btn btn-primary py-2 ml-2" href="https://twitter.com/intent/tweet?text=Un nuevo trayecto 🗺️ te espera:%0A
+📌 {{ trayecto.ciudadOrigen }}%0A
+🚩 {{ trayecto.ciudadDestino }}%0A
+📆 {{ trayecto.fechaHora.strftime('%d/%m/%Y') }}%0A
+⏰ {{ trayecto.fechaHora.strftime('%H:%M') }}%0A
+👤 {{ trayecto.conductor.nombre }} {{ trayecto.conductor.apellidos|first }}%0A
+🚗 {{ trayecto.coche["marca"] }} {{ trayecto.coche["modelo"] }}%0A
+💶 {{ trayecto.precio }} €.%0A %0A
+Más detalles: https://llevame-b5.herokuapp.com/app/trayectos/{{trayecto["id"] }}"><i class="fab fa-twitter"></i> Compartir en Twitter</a>
+
+                </div>
+    					</div>
+    				</div>
+    			</div>
+
+          <div id="{{ idModal }}" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+          
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">¿Desea eliminar este trayecto?</h4>
+                </div>
+                <div class="modal-body">
+                  <p>Si elimina este trayecto, todos los usuarios perderán su reserva. Esta acción no podrá ser revertida.</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+                  <form action="{{ url_for('eliminar_trayecto_c') }}" method="post">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                    <input type="hidden" name="id_trayecto" value="{{ trayecto.id }}">
+                  </form>
+                </div>
+              </div>
+          
+            </div>
+          </div>
+          {% if vars.update({'cont': vars.cont + 1}) %} {% endif %}
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </section>	
+
+
+    <section class="ftco-section ftco-no-pt bg-light">
+    	<div class="container">
+    		<div class="row justify-content-center">
+          <div class="col-md-12 mt-5 heading-section text-center ftco-animate mb-4">
+            <h2 class="mb-2">Sus trayectos pasados</h2>
+          </div>
+        </div>
+
+
+        <div class="row">
+          {% if trayectos_pas|length == 0 %}
+          <div class="col-md-12">
+    				<div class="car-wrap rounded ftco-animate">
+                        <div class="text" style="background-color: #e3f0f8;">
+                            <p class="d-flex mb-0 mt-1 justify-content-center">
+                                <b>No tiene trayectos realizados.</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+          {% else %}
+          {% for trayecto in trayectos_pas %}
+          {% if trayecto.fechaHora < fecha_actual %}
+          <div class="col-md-12">
+    				<div class="car-wrap rounded ftco-animate">
+              <div class="row">
+                <div class="col-md-6">
+                  	<div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                <i class="fas fa-map-marker-alt"></i> <b>Origen</b>
+              </div>
+              <div class="tarjetaTrayectoDatos" style="overflow: hidden;">
+                {{ trayecto.direccionOrigen }} 
+              </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                    <i class="fas fa-flag"></i><b> Destino</b>
+                  </div>
+                  <div class="tarjetaTrayectoDatos" style="overflow: hidden;">
+                    {{ trayecto.direccionDestino }}
+                  </div>
+                </div>
+              </div>
+             <!-- <div class="text" style="padding: 10px 30px 1px;"></div>-->
+    				
+             <div class="row">
+              <div class="col-md-28">
+                <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                  <i class="far fa-calendar-alt"></i><b> Fecha y hora</b>
+                </div>
+                <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                  {{ trayecto.fechaHora.strftime('%d/%m/%Y') }} a las {{ trayecto.fechaHora.strftime('%H:%M') }}
+                </div>
+              </div>
+
+              <div class="col-md-2nuevo">
+                <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                  <i class="fas fa-coins"></i><b> Precio</b>
+                </div>
+                <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                  {{ trayecto.precio }}€
+                </div>
+              </div>
+
+              <div class="col-md-25">
+                <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                  <i class="fas fa-people-arrows"></i><b> Plazas libres</b>
+                </div>
+                <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                  {{ trayecto.plazasDisponibles }}
+                </div>
+              </div>
+
+              <div class="col-md-58">
+                <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                  <i class="fas fa-car"></i><b> Vehículo</b>
+                </div>
+                <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                  {% if trayecto.coche["_id"] is defined %}
+                  {{ trayecto.coche["marca"] }} {{ trayecto.coche["modelo"] }}
+                  {% else %}
+                  Vehículo inexistente
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+              
+              <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                <i class="fas fa-file-alt"></i><b> Descripción</b>
+              </div>
+              <div class="tarjetaTrayectoDatos" style="overflow: hidden;">
+                {{ trayecto.descripcion }}
+              </div>
+
+              <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                <i class="fas fa-user-friends"></i><b> Pasajeros</b>
+              </div>
+              <div class="tarjetaTrayectoDatos desbordamientoTexto" style="padding-bottom: 13px;">
+                {% if trayecto.reservas|length == 0 %}
+                Ningún pasajero ha reservado plaza en este trayecto
+                {% else %}
+                {% for reserva in trayecto.reservas %}
+                <div class="row mt-1">
+                  <div class="col-md-10 align-content-center mt-2">
+                    &nbsp;&nbsp;<i class="far fa-dot-circle" style="color: #1089ff;"></i> <a href="{{ url_for('get_usuario_c', id_usuario=reserva.solicitante.id) }}">{{ reserva.solicitante.nombre }} {{ reserva.solicitante.apellidos }}</a> reservó <b>{{ reserva.plazasReservadas }}</b>
+                {% if reserva.plazasReservadas|int == 1 %} <b>plaza</b> {% else %} <b>plazas</b> {% endif %} el día {{ reserva.fechaReserva.strftime('%d/%m/%Y') }} a las {{ reserva.fechaReserva.strftime('%H:%M') }}. </br>
+                    {% set vars = {'foo': False} %}
+                    {% for valoracion in reserva.solicitante.valoraciones  %}
+                    {% if valoracion.id_reserva|string == reserva.id|string and valoracion.tipo|string == "pasajero" %}
+                        {% if vars.update({'foo': True}) %} {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                  </div>
+                  <div class="col-md-2 align-content-center">
+                    {% if vars.foo == False %}
+                    <form action="{{ url_for('enviar_valoracion_c', id_valorador=trayecto.conductor.id, id_valorado=reserva.solicitante.id, id_reserva=reserva.id)}}" method="post" >
+                                <input type="hidden" name="tipo" value="{{ tipo }}">
+                                <button type="submit" class="btn btn-success py-2 mr-3">Valorar pasajero</button>
+                    </form>
+                    {% endif %}
+                  </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+              </div>
+              
+    				</div>
+          
+    			</div>
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </section>	
+    {% endblock %}

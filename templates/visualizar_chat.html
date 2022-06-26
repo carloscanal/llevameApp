@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Chat{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+  <section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-12 mt-5 heading-section text-center ftco-animate mb-5">
+        </div>
+      </div>
+  </div>
+  </section>
+    <div class="text-wrap">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters justify-content-start align-items-center justify-content-center">
+          <div class="col-lg-8 ftco-animate">
+          	<div class="text w-100 text-center mb-3">
+                {% if user2 is defined%}
+                    <h3 class="mt-4">Chat con <a href="{{ url_for('get_usuario_c', id_usuario=user2["_id"]) }}">{{ user2["nombre"] }} {{ user2["apellidos"] }}</a></h3>
+                {% else %}
+	                <h3 class="mt-4">Chat con {% if chat["usuario1"]["_id"]|string == session["id"]|string %} <a href="{{ url_for('get_usuario_c', id_usuario=chat["usuario2"]["_id"]) }}">{{ chat["usuario2"]["nombre"] }} {{ chat["usuario2"]["apellidos"] }} </a> {% else %} <a href="{{ url_for('get_usuario_c', id_usuario=chat["usuario1"]["_id"]) }}">{{ chat["usuario1"]["nombre"] }} {{ chat["usuario1"]["apellidos"] }} </a>{% endif %}</h3>
+                {% endif %}
+            </div>
+          </div>
+        </div>
+  {% if chat is not defined %}
+   <div class="text-center"> <p>No hay mensajes en este chat. Inicie la conversación.</p></div>
+    <form action="{{ url_for('crear_chat_c',id_usuario=session["id"]) }}" method="post">
+        <input type="hidden" name="id_usuario2" value="{{ user2["_id"] }}">
+            <div class="row">
+                  <div class="col-md-11 form-group mt-3">
+                    <textarea type="text" name="mensaje" class="form-control" rows="2" required style="font-size: 1em; text-align: left;"></textarea>
+                  </div>
+                  <div class="col-md-1 form-group mt-45">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i></button>
+                  </div>
+             </div>
+    </form>
+{% else %}
+    <section class="ftco-section ftco-no-pt bg-light">
+        <div class="container">
+            {% set vars = {'fecha': chat["listaMensaje"][0]["fecha"].strftime('%Y-%m-%d') } %}
+            <div class="text-center request-form2 bg-primary">{{ chat["listaMensaje"][0]["fecha"].strftime('%d/%m/%y') }}</div>
+            {% for mensaje in chat["listaMensaje"] %}
+                        {% if vars.fecha < mensaje["fecha"].strftime('%Y-%m-%d') %}
+                            <div class="text-center request-form2 bg-primary">{{ mensaje["fecha"].strftime('%d/%m/%y') }}</div>
+                            {% if vars.update({'fecha': mensaje["fecha"].strftime('%Y-%m-%d')}) %} {% endif %}
+                        {% endif  %}
+                        {% if (mensaje["emisor"]|string == session["id"]|string) %}
+                        <div class="contenedor_chats row">
+                                      <div id="content" class="col-md-11" style="overflow: hidden; text-align: right">
+                                        <p>{{ mensaje["mensaje"]}}</p>
+                                        <span class="time-right">{{ mensaje["fecha"].strftime('%H:%M') }}</span>
+                                      </div>
+                                    <div class="mt-2 col-md-1">
+                                    {% if (session["id"]|string == usuario1["_id"]|string) %}
+                                      <img src="{{ usuario1["fotografia"] }}" alt="Avatar" class="right">
+                                    {% else %}
+                                        <img src="{{ usuario2["fotografia"] }}" alt="Avatar" class="right">
+                                    {% endif %}
+                                    </div>
+                        </div>
+                        {% else %}
+                        <div class="contenedor_chats darker row">
+                        <div class="col-md-1 mt-2">
+                            {% if (session["id"]|string == usuario1["_id"]|string) %}
+                              <img src="{{ usuario2["fotografia"] }}" alt="Avatar">
+                            {% else %}
+                              <img src="{{ usuario1["fotografia"] }}" alt="Avatar">
+                            {% endif %}
+                        </div>
+                          <div id="content" class="col-md-11" style="overflow: hidden; text-align: left">
+                            <p>{{ mensaje["mensaje"]}}</p>
+                            <span class="time-left">{{ mensaje["fecha"].strftime('%H:%M') }}</span>
+                          </div>
+                        </div>
+                {% endif %}
+            {% endfor %}
+                <form action="{{ url_for('enviar_mensaje_c',id_emisor=session["id"], id_chat=chat["_id"]|string) }}" method="post">
+                      <div class="row">
+                          <div class="col-md-11 form-group mt-3">
+                            <textarea type="text" name="mensaje" class="form-control" rows="2" required style="font-size: 1em; text-align: left;"></textarea>
+                          </div>
+                          <div class="col-md-1 form-group mt-45">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i></button>
+                          </div>
+                     </div>
+                </form>
+        </div>
+    </section>
+{% endif %}
+      </div>
+    </div>
+  <section class="ftco-section ftco-no-pt">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-12 mt-5 heading-section text-center ftco-animate mb-5">
+        </div>
+      </div>
+  </div>
+  </section>
+
+ <script>
+    window.scrollTo(0,document.body.scrollHeight);
+ </script>
+{% endblock %}
+{% block footer %}
+{% endblock %}

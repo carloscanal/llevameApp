@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Añadir coche{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+    
+{% block content %}
+
+    <div class="hero-wrap ftco-degree-bg" style="background-image: url('/static/images/miscoches.png');" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text justify-content-start align-items-center justify-content-center">
+          <div class="col-lg-8 ftco-animate">
+          	<div class="text w-100 text-center mb-md-6 pb-md-5">
+	            <h1 class="mb-4 sombrita">Añade un coche nuevo para realizar trayectos.</h1>
+	            <p class="sombrita2" style="font-size: 18px;">Se puede añadir información sobre tus coches para mostrarla a los usuarios que estén interesados en viajar contigo.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form action="{{ url_for('insertar_coche_c') }}" method="post" enctype="multipart/form-data">
+     <section class="ftco-section ftco-no-pt bg-light">
+    	<div class="container">
+    		<div class="row no-gutters">
+    			<div class="col-md-12	featured-top">
+    				<div class="row no-gutters">
+	  					<div class="col-md-12 d-flex align-items-center">
+	  						<div class="services-wrap2 rounded-right w-100">
+	  							<h3 class="heading-section mb-3">Datos del coches a crear:</h3>
+                            <div class="row d-flex mb-4">
+					          <div class="col-md-3 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="text w-100">
+					                <h3 class="heading mb-3 detallesTexto"><i class="fas fa-car"></i><b> Marca</b></h3>
+                          <div class="form-group mt-3">
+                            <input type="text" name="marca" class="form-control" required style="font-size: 1em; text-align: center;">
+                          </div>
+				                </div>
+					            </div>
+					          </div>
+
+                                <div class="col-md-3 d-flex align-self-stretch ftco-animate">
+                                    <div class="services w-100 text-center">
+                                        <div class="text w-100">
+                                            <h3 class="heading mb-3 detallesTexto"><i class="fas fa-certificate"></i></i><b> Modelo</b></h3>
+                                              <div class="form-group mt-3">
+                                                <input type="text" name="modelo" class="form-control" required style="font-size: 1em; text-align: center;"/>
+                                              </div>
+				                        </div>
+					                </div>
+					          </div>
+                                <div class="col-md-3 d-flex align-self-stretch ftco-animate">
+                                    <div class="services w-100 text-center">
+                                        <div class="text w-100">
+                                            <h3 class="heading mb-3 detallesTexto"><i class="fas fa-tag"></i><b> Tipo</b></h3>
+                                              <div class="form-group mt-3">
+                                                <input type="text" name="tipo" class="form-control" required style="font-size: 1em; text-align: center;"/>
+                                              </div>
+				                        </div>
+					                </div>
+					          </div>
+                                <div class="col-md-3 d-flex align-self-stretch ftco-animate">
+                                    <div class="services w-100 text-center">
+                                        <div class="text w-100">
+                                            <h3 class="heading mb-3 detallesTexto"><i class="fas fa-tint"></i><b> Color</b></h3>
+                                              <div class="form-group mt-3">
+                                                <input type="text" name="color" class="form-control" required style="font-size: 1em; text-align: center;"/>
+                                              </div>
+				                        </div>
+					                </div>
+					          </div>
+                            </div>
+                            <div class="row d-flex mb-4">
+                                 <div class="col-md-12 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="text w-100">
+					                <h3 class="heading mb-3 detallesTexto"><i class="fas fa-info-circle"></i><b> Descripción</b></h3>
+                                      <div class="form-group mt-3">
+                                        <textarea type="text" name="descripcion" class="form-control" rows="2" placeholder="Por ejemplo, el maletero es muy pequeño o el asiento del medio de atrás es muy cómodo."  style="font-size: 1em; text-align: center;"></textarea>
+                                      </div>
+				                </div>
+					            </div>
+					          </div>
+					        </div>
+
+                            <div class="row d-flex mb-4">
+                                 <div class="col-md-12 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="text w-100">
+					                <h3 class="heading mb-3 detallesTexto"><i class="fas fa-images"></i><b> Subir imagen</b></h3>
+                                      <div class="form-group mt-3">
+                                        <input type="file" name="fotografia" class="form-control" value=""/>
+                                      </div>
+				                </div>
+					            </div>
+					          </div>
+					        </div>
+                          <div class="botonCentrado">
+                            <p><button type="submit" class="btn btn-primary py-3 px-4">Añadir coche</button></p>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+     </section>
+     </form>
+
+     <section class="ftco-section ftco-no-pt bg-light">
+    	<div class="container">
+    		<div class="row justify-content-center">
+          <div class="col-md-12 mt-5 heading-section text-center ftco-animate mb-4">
+          </div>
+        </div>
+    </div>
+    </section>
+{% endblock %}

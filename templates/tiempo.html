@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+{% block title %}El tiempo{% endblock %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+{% endblock %}
+    
+{% block content %}
+<div class="hero-wrap ftco-degree-bg" style="background-image: url('/static/images/eltiempo.png');" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row no-gutters slider-text justify-content-start align-items-center justify-content-center">
+        <div class="col-lg-8 ftco-animate">
+            <div class="text w-100 text-center mb-md-6 pb-md-5">
+              <h1 class="mb-4 sombrita">Tiempo meteorológico</h1>
+              <p class="sombrita2" style="font-size: 18px;">Consulte la información meteorológica actual de su ubicación, o utilice el mapa proporcionado para conocer el tiempo en otra ciudad.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+      <div class="row no-gutters">
+        <div class="col-md-12	featured-top">
+          <div class="row no-gutters">
+            <div class="col-md-12 d-flex align-items-center">
+              <div class="services-wrap2 rounded-right w-100">
+                <h3 class="heading-section mb-4">Introduzca la localidad donde consultar el tiempo:</h3>
+                {% set fMunicipio = filtroMunicipio|title  if filtroMunicipio != 'vacio' else '' %}
+              <form action="{{ url_for('get_tiempo') }}" method="GET">
+                <div class="row d-flex mb-4">
+                  <div class="col-md-12 d-flex align-self-stretch ftco-animate">
+                    <div class="services w-100 text-center">
+                      <div class="text w-100">
+                        <div class="form-group mt-2">
+                          <input type="text" name="municipio" id="filtroMunicipio" class="form-control" value="{{ fMunicipio }}" style="font-size: 1em; text-align: center;" placeholder="Localidad" > 
+                      </div>
+                      </div>
+                    </div>      
+                  </div>
+                </div>
+                <div class="botonCentrado">
+                  <button type="submit" class="btn btn-primary py-3 px-4">Consultar</button>
+                </div>
+              </form>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-12 mt-5 heading-section text-center ftco-animate mb-4">
+        </div>
+      </div>
+  </div>
+  </section>
+
+  {% if direccion != 'imposible' %}
+  <section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-12 mt-2 heading-section text-center ftco-animate mb-4">
+          {% set tDireccion = direccion if direccion != '' else 'su ubicación actual' %}
+          <h2 class="mb-2">El tiempo en {{ tDireccion }}</h2>
+        </div>
+      </div>
+      <div class="row no-gutters">
+        <div class="col-md-12">
+          <div class="row no-gutters">
+            <div class="col-md-12 d-flex align-items-center ftco-animate">
+              <div class="services-wrap2 rounded-right w-100">
+                <h3 class="heading-section mb-4" style="text-align: center;">En este momento</h3>
+                <div class="row d-flex mb-4">
+                  <div class="col-md-4 d-flex align-self-stretch ftco-animate">
+                    <div class="w-100 text-center">
+                      <div class="icon d-flex align-items-center justify-content-center"><span>
+                        <span class="iconify" data-icon="carbon:radar-weather" style="font-size:60px; color: #1089ff;"></span>
+                      </span></div> 
+                      <div class="text w-100 mt-2" style="color: black; font-weight: 500;">
+                        Tiempo
+                      </div>
+                      <div class="text w-100">
+                        {{ meteo['informacion'] }}
+                      </div>
+                    </div>      
+                  </div>
+                  <div class="col-md-4 d-flex align-self-stretch ftco-animate">
+                    <div class="w-100 text-center">
+                      <div class="icon d-flex align-items-center justify-content-center"><span>
+                        <span class="iconify" data-icon="fluent:temperature-16-filled" style="font-size:60px; color: #1089ff;"></span>
+                      </span></div> 
+                      <div class="text w-100 mt-2" style="color: black; font-weight: 500;">
+                        Temperatura
+                      </div>
+                      <div class="text w-100">
+                        {{ meteo['temperatura'] }}ºC
+                      </div>
+                    </div>      
+                  </div>
+                  <div class="col-md-4 d-flex align-self-stretch ftco-animate">
+                    <div class="w-100 text-center">
+                      <div class="icon d-flex align-items-center justify-content-center"><span>
+                        <span class="iconify" data-icon="bi:sunrise-fill"  style="font-size:60px; color: #1089ff;"></span>
+                      </span></div> 
+                      <div class="text w-100 mt-2" style="color: black; font-weight: 500;">
+                        Salida del sol
+                      </div>
+                      <div class="text w-100">
+                        {{ meteo['salidaSol'] }}
+                      </div>
+                    </div>      
+                  </div>
+                </div>
+
+                <div class="row d-flex mt-2 mb-3">
+                  <div class="col-md-4 d-flex align-self-stretch ftco-animate">
+                    <div class="w-100 text-center">
+                      <div class="icon d-flex align-items-center justify-content-center"><span>
+                        <span class="iconify" data-icon="bi:clouds-fill" style="font-size:60px; color: #1089ff;"></span>
+                      </span></div> 
+                      <div class="text w-100 mt-2" style="color: black; font-weight: 500;">
+                        Nubes
+                      </div>
+                      <div class="text w-100">
+                        {{ meteo['nubes'] }}%
+                      </div>
+                    </div>      
+                  </div>
+                  <div class="col-md-4 d-flex align-self-stretch ftco-animate">
+                    <div class="w-100 text-center">
+                      <div class="icon d-flex align-items-center justify-content-center"><span>
+                        <span class="iconify" data-icon="ph:wind-bold" style="font-size:60px; color: #1089ff;"></span>
+                      </span></div> 
+                      <div class="text w-100 mt-2" style="color: black; font-weight: 500;">
+                        Viento
+                      </div>
+                      <div class="text w-100">
+                        {{ meteo['viento'] }} km/h
+                      </div>
+                    </div>      
+                  </div>
+                  <div class="col-md-4 d-flex align-self-stretch ftco-animate">
+                    <div class="w-100 text-center">
+                      <div class="icon d-flex align-items-center justify-content-center"><span>
+                        <span class="iconify" data-icon="bi:sunset-fill" style="font-size:60px; color: #1089ff;"></span>
+                      </span></div> 
+                      <div class="text w-100 mt-2" style="color: black; font-weight: 500;">
+                        Puesta del sol
+                      </div>
+                      <div class="text w-100">
+                        {{ meteo['puestaSol'] }}
+                      </div>
+                    </div>      
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-12 mt-4 heading-section text-center ftco-animate mb-4">
+        </div>
+      </div>
+  </div>
+  </section>
+
+  <section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+      <div class="row no-gutters">
+        <div class="col-md-12">
+          <div class="row no-gutters">
+            <div class="col-md-12 d-flex align-items-center ftco-animate">
+              <div class="services-wrap2 rounded-right w-100">
+                <h3 class="heading-section mb-4" style="text-align: center;">En los próximos días</h3>
+                <div class="row d-flex mb-2" style="overflow:auto">
+                  <table class="table">
+                    <thead class="thead-primary">
+                      <tr class="text-center">
+                        <th>&nbsp;</th>
+                        <th class="bg-primary heading">Tiempo</th>
+                        <th class="bg-primary heading">Temperatura</th>
+                        <th class="bg-primary heading">Nubes</th>
+                        <th class="bg-primary heading">Viento</th>
+                        <th class="bg-primary heading">Salida del sol</th>
+                        <th class="bg-primary heading">Puesta del sol</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for dia in meteo_prox %}
+                      <tr class="">
+                        <td class="price" style="background-color: #1089ff; color: #fff !important; font-weight: 500; text-align: justify;">
+                          <div>
+                            <span>{{dia['fecha']}}</span>
+                          </div>
+                        </td>
+                        <td class="price">
+                          <div>
+                            <span class="subheading">{{dia['informacion']}}</span>
+                          </div>
+                        </td>
+                        
+                        <td class="price">
+                          <div>
+                            <span class="subheading">{{dia['temperatura']}}ºC</span>
+                          </div>
+                        </td>
+
+                        <td class="price">
+                          <div>
+                            <span class="subheading">{{dia['nubes']}}%</span>
+                          </div>
+                        </td>
+
+                        <td class="price">
+                          <div>
+                            <span class="subheading">{{dia['viento']}} km/h</span>
+                          </div>
+                        </td>
+
+                        <td class="price">
+                          <div>
+                            <span class="subheading">{{dia['salidaSol']}}</span>
+                          </div>
+                        </td>
+
+                        <td class="price">
+                          <div>
+                            <span class="subheading">{{dia['puestaSol']}}</span>
+                          </div>
+                        </td>
+                      </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </section>
+  {% else %}
+  <section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-12 mt-3 text-center ftco-animate mb-4">
+            <h2 class="mb-2" style=" font-size: 40px; font-weight: 600;">No se puede obtener la previsión para esa ubicación</h2>
+            <div class="herowrapmodi"  style="background-image: url('/static/images/accidente3.png');">
+            </div>
+          </div>
+
+      </div>
+    </div>
+  </section>
+  {% endif %}
+  
+  <section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-12 mt-5 heading-section text-center ftco-animate mb-4">
+        </div>
+      </div>
+  </div>
+  </section>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+{% endblock %}

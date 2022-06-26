@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Mis chats{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+    
+{% block content %}
+        <h1> Listado de Chats </h1>
+        
+        {% for %}
+        <form action="{{ url_for('get_trayectos_creados_por_usuario_id_c', id_usuario=session["id"])}}" method="get" >
+            <input type="submit" value="Mis trayectos">
+        </form>
+            ----------------------------------------------------------- <br/>
+        {% endfor %}
+{% endblock %}

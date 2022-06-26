@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Editar perfil{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+    
+{% block content %}
+    <div class="hero-wrap ftco-degree-bg" style="background-image: url('/static/images/miperfil.png');" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text justify-content-start align-items-center justify-content-center">
+          <div class="col-lg-8 ftco-animate">
+          	<div class="text w-100 text-center mb-md-6 pb-md-5">
+	            <h1 class="mb-4 sombrita">Editar perfil</h1>
+	            <p class="sombrita2" style="font-size: 18px;">Puede modificar cualquier campo informativo de su perfil... ¡pero con cuidado!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form action="{{ url_for('actualizar_usuario_c') }}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="id_usuario" value="{{ usuario.id }}">
+     <section class="ftco-section ftco-no-pt bg-light">
+    	<div class="container">
+    		<div class="row no-gutters">
+    			<div class="col-md-12	featured-top">
+	  					<div class="col-md-12 d-flex align-items-center">
+	  						<div class="services-wrap rounded-right w-100">
+                            <div class="row d-flex mb-4">
+					          <div class="col-md-6 align-self-stretch ftco-animate">
+                                <div class="row mb-4">
+                                    <div class="services w-100 text-center">
+                                        <h3 class="heading mb-3 detallesTexto"><i class="fas fa-images" aria-hidden="true"></i><b> Imagen</b></h3>
+                                        <img src="{{ usuario.fotografia }}" alt="Foto usuario" class="img-fluid rounded mb-4 img-perfil2" >
+					                </div>
+                                    <div class="services w-100 text-center form-group mt-3">
+                                        <h3 class="heading mb-3 detallesTexto"><i class="fas fa-images" aria-hidden="true"></i><b> Subir imagen</b></h3>
+
+                                        <input type="file" name="fotoPerfil" class="form-control " value=""/>
+                                    </div>
+                                </div>
+
+
+					          </div>
+                              <div class="col-md-1 d-flex align-self-stretch  ftco-animate"></div>
+
+					          <div class="col-md-5 align-self-stretch  ftco-animate">
+                                  <div class="row mb-5">
+                                      <div class="services w-100 text-center">
+                                        <div class="text w-100">
+                                            <h3 class="heading mb-3 detallesTexto"><i class="fas fa-user" aria-hidden="true"></i><b> Nombre</b></h3>
+                                              <div class="form-group mt-3">
+                                                <input type="text" name="nombre" value="{{ usuario.nombre }}" class="form-control" required="" style="font-size: 1em; text-align: center;">
+                                              </div>
+                                        </div>
+
+                                        <div class="text w-100">
+                                            <h3 class="heading mb-3 detallesTexto"><i class="fas fa-users" aria-hidden="true"></i><b> Apellidos</b></h3>
+                                              <div class="form-group mt-3">
+                                                <input type="text" name="apellidos" value="{{ usuario.apellidos }}" class="form-control" required="" style="font-size: 1em; text-align: center;">
+                                              </div>
+                                        </div>
+                                      </div>
+                                  </div>
+
+                                      <div class="row mb-2">
+                                      <div class="services w-100 text-center">
+                                        <div class="text w-100">
+                                            <h3 class="heading mb-3 detallesTexto"><i class="fas fa-info-circle" aria-hidden="true"></i><b> Descripción</b></h3>
+                                              <div class="form-group mt-3">
+                                                <textarea type="text" name="descripcion" class="form-control" rows="5" placeholder="Por ejemplo, soy una persona muy servicial." style="font-size: 1em; text-align: center;">{{ usuario.descripcion }}</textarea>
+                                              </div>
+                                        </div>
+                                      </div>
+
+                                  </div>
+
+					        </div>
+					        </div>
+
+                                  <div class="botonCentrado">
+                                    <p><button type="submit" class="btn btn-secondary py-3 px-4">Guardar cambios</button></p>
+                                  </div>
+	  						</div>
+	  					</div>
+
+				</div>
+  		</div>
+        </div>
+    </section>
+    </form>
+
+
+    <section class="ftco-section ftco-no-pt bg-light">
+    	<div class="container">
+    		<div class="row justify-content-center">
+          <div class="col-md-12 mt-5 heading-section text-center ftco-animate mb-4">
+          </div>
+        </div>
+    </div>
+    </section>
+{% endblock %}

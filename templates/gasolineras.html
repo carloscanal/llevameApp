@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}Gasolineras{% endblock %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+{% endblock %}
+    
+{% block content %}
+<div class="hero-wrap ftco-degree-bg" style="background-image: url('/static/images/gasolineras2.png');" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row no-gutters slider-text justify-content-start align-items-center justify-content-center">
+        <div class="col-lg-8 ftco-animate">
+            <div class="text w-100 text-center mb-md-6 pb-md-5">
+              <h1 class="mb-4 sombrita">Gasolineras de España</h1>
+              <p class="sombrita2" style="font-size: 18px;">Consulte la información de todas las gasolineras de España recogidas en un mapa. Seleccione alguna de ellas para ver sus datos.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+      <div class="row no-gutters">
+        <div class="col-md-12	featured-top">
+          <div class="row no-gutters">
+            <div class="col-md-12 d-flex align-items-center">
+              <div class="services-wrap2 rounded-right w-100">
+                <h3 class="heading-section mb-4">Introduzca el municipio para buscar gasolineras:</h3>
+                {% set fMunicipio = filtroMunicipio|title  if filtroMunicipio %}
+              <form action="{{ url_for('get_gasolineras_por_municipio_bueno_c') }}" method="get">
+                <div class="row d-flex mb-4">
+                  <div class="col-md-12 d-flex align-self-stretch ftco-animate">
+                    <div class="services w-100 text-center">
+                      <div class="text w-100">
+                        <div class="form-group mt-2">
+                          <input type="text" name="municipio" id="filtroMunicipio" class="form-control" value="{{ fMunicipio }}" style="font-size: 1em; text-align: center;" placeholder="Localidad" > 
+                      </div>
+                      </div>
+                    </div>      
+                  </div>
+                </div>
+                <div class="botonCentrado">
+                  <button type="submit" class="btn btn-primary py-3 px-4">Buscar gasolineras</button>
+                </div>
+              </form>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-12 mt-5 heading-section text-center ftco-animate mb-4" id="seccionAControlar">
+            <div id="mapa" class="mapaGasolineras"></div>
+        </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-md-12 mt-5 text-center ftco-animate mb-4" style="display:none;" id="seccionNoEncontrado">
+            <h2 class="mb-2" style=" font-size: 40px; font-weight: 600;">No se encuentran gasolineras para ese municipio</h2>
+            <div class="herowrapmodi"  style="background-image: url('/static/images/accidente3.png');">
+            </div>
+          </div>
+
+      </div>
+    </div>
+  </section>
+
+  
+  <section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-12 mt-5 heading-section text-center ftco-animate mb-4">
+        </div>
+      </div>
+  </div>
+  </section>
+
+  <script>
+    let filtro = document.getElementById("filtroMunicipio");
+
+    if (!filtro.value) {
+      const map = L.map("mapa").locate({setView: true});
+      L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors</a>'
+      }).addTo(map);
+
+    } else if (filtro.value) {
+      obtenerGasolineras();
+    } 
+
+    function obtenerGasolineras() {
+      if ( {{ gasolineras|length }} > 0 ) {
+        let gasolineras = {{ gasolineras|tojson|safe }};
+        const map = L.map("mapa").setView([parseFloat(gasolineras[0]["latitud"].replace(/,/, '.')), parseFloat(gasolineras[0]["longitud"].replace(/,/, '.'))], 13);
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors</a>'
+        }).addTo(map);
+        const markerGroup = L.layerGroup().addTo(map);
+        for (var i = 0; i < gasolineras.length; i++) {
+          latitud = parseFloat(gasolineras[i]["latitud"].replace(/,/, '.'));
+          longitud = parseFloat(gasolineras[i]["longitud"].replace(/,/, '.'));
+          var latlng = new L.latLng(latitud, longitud);
+          L.marker(latlng).addTo(markerGroup)
+            .bindPopup(gasolineras[i]["direccion"] + "<br/>" +
+              "Localidad: " + capitalizarPrimeraLetra(gasolineras[i]["localidad"]) + "<br/>" + 
+              "Municipio: " + capitalizarPrimeraLetra(gasolineras[i]["municipio"]) + "<br/>" +
+              "Provincia: " + capitalizarPrimeraLetra(gasolineras[i]["provincia"]) + "<br/>" +
+              latitud + ", " + longitud)
+        }    
+      } else {
+        borrarMapaYPonerNoEncontrado();
+      }
+    }
+
+    function borrarMapaYPonerNoEncontrado() {
+      var seccion = document.getElementById("seccionAControlar");
+      seccion.parentNode.removeChild(seccion);
+
+      var secNoEncontrado = document.getElementById("seccionNoEncontrado");
+      secNoEncontrado.style.display = "inline-block";
+    }
+
+    function capitalizarPrimeraLetra(string) {
+      string = string.toLowerCase();
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+    
+  </script>
+
+{% endblock %}

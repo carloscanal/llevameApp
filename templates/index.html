@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% block title %}Inicio{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+    
+    {% block content %}
+ 
+    <div class="hero-wrap ftco-degree-bg" style="background-image: url('/static/images/inicio1.png');" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text justify-content-start align-items-center justify-content-center">
+          <div class="col-lg-8 ftco-animate">
+          	<div class="text w-100 text-center mb-md-6 pb-md-5">
+	            <h1 class="mb-4 sombrita">¡Encuentre el viaje perfecto!</h1>
+	            <p class="sombrita2" style="font-size: 18px;">Rellene los siguientes campos para realizar una búsqueda de trayectos aplicando los filtros correspondientes.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+     <section class="ftco-section ftco-no-pt bg-light">
+    	<div class="container">
+    		<div class="row no-gutters">
+    			<div class="col-md-12	featured-top">
+    				<div class="row no-gutters">
+	  					<div class="col-md-12 d-flex align-items-center">
+	  						<div class="services-wrap2 rounded-right w-100">
+	  							<h3 class="heading-section mb-4">Filtre de acuerdo a sus preferencias:</h3>
+                  {% set fOrigen    = filtroOrigen|title  if filtroOrigen       %}
+                  {% set fDestino   = filtroDestino|title if filtroDestino      %}
+                  {% set fFecha     = filtroFecha if filtroFecha                %}
+                  {% set fPasajeros = filtroPasajeros if filtroPasajeros else 1 %}
+                <form action="{{ url_for('filtrar_trayectos_c') }}" method="get">
+	  							<div class="row d-flex mb-4">
+					          <div class="col-md-3 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="icon d-flex align-items-center justify-content-center"><span>
+                          <i class="fas fa-map-marker-alt" style="font-size:40px"></i>
+                        </span></div>
+				              	<div class="text w-100">
+					                <h3 class="heading mb-3">Origen</h3>
+                          <div class="form-group">
+                            <input type="text" name="ciudadOrigen" class="form-control" value="{{ fOrigen }}" style="font-size: 1em; text-align: center;" placeholder="Localidad" > 
+                        </div>
+				                </div>
+					            </div>      
+					          </div>
+					          <div class="col-md-3 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="icon d-flex align-items-center justify-content-center"><span>
+                          <i class="fas fa-flag" style="font-size:40px"></i>
+                        </span></div>
+				              	<div class="text w-100">
+					                <h3 class="heading mb-3">Destino</h3>
+                          <div class="form-group">
+                            <input type="text" name="ciudadDestino" class="form-control" value="{{ fDestino }}" style="font-size: 1em; text-align: center;" placeholder="Localidad">
+                        </div>
+					              </div>
+					            </div>      
+					          </div>
+					          <div class="col-md-3 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="icon d-flex align-items-center justify-content-center"><span>
+                          <i class="far fa-calendar-alt" style="font-size:40px"></i>
+                        </span></div>
+				              	<div class="text w-100">
+					                <h3 class="heading mb-3">Fecha</h3>
+                          <div class="form-group">
+                            <input type="date" name="fecha" id="fechaFiltro" class="form-control" value="{{ fFecha }}" style="font-size: 1em; text-align: center;">
+                        </div>
+					              </div>
+					            </div>      
+					          </div>
+                    <div class="col-md-3 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="icon d-flex align-items-center justify-content-center"><span>
+                          <i class="fas fa-user-friends" style="font-size:40px"></i>
+                        </span></div>
+				              	<div class="text w-100">
+					                <h3 class="heading mb-3">Pasajeros</h3>
+                          <div class="form-group">
+                            <input type="number" name="pasajeros" class="form-control" value="{{ fPasajeros }}" min="1" style="font-size: 1em; text-align: center;">
+                        </div>
+					              </div>
+					            </div>      
+					          </div>
+					        </div>
+                  <div class="botonCentrado">
+                    <button type="submit" class="btn btn-primary py-3 px-4">Consultar trayectos</button>
+                  </div>
+                </form>
+	  						</div>
+	  					</div>
+	  				</div>
+				</div>
+  		</div>
+    </section>
+
+    {% set mensaje = 'Trayectos disponibles' if trayectos|length > 0 else 'No existen trayectos con esos parámetros' %}
+    <section class="ftco-section ftco-no-pt bg-light">
+    	<div class="container">
+    		<div class="row justify-content-center">
+          <div class="col-md-12 mt-5 heading-section text-center ftco-animate mb-4">
+            <h2 class="mb-2">{{ mensaje }}</h2>
+          </div>
+        </div>
+
+        <div class="row">
+          {% for trayecto in trayectos %}
+          <div class="col-md-4">
+    				<div class="car-wrap rounded ftco-animate">
+              <div class="text" style="padding: 10px 30px 1px;"></div>
+    					<div class="text tarjetaTrayecto" style="padding: 10px 30px 2px;">
+                <i class="fas fa-map-marker-alt"></i> <b>Origen</b>
+              </div>
+              <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                {{ trayecto.ciudadOrigen }}
+              </div>
+              <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                <i class="fas fa-flag"></i><b> Destino</b>
+              </div>
+              <div class="tarjetaTrayectoDatos desbordamientoTexto">
+                {{ trayecto.ciudadDestino }}
+              </div>
+              <div class="mt-3 text tarjetaTrayecto" style="padding: 3px 30px 2px;">
+                <i class="far fa-calendar-alt"></i><b> Fecha y hora</b>
+              </div>
+              <div class="tarjetaTrayectoDatos desbordamientoTexto" style="padding-bottom: 13px;">
+                {{ trayecto.fechaHora.strftime('%d-%m-%Y') }} a las {{ trayecto.fechaHora.strftime('%H:%M') }}
+              </div>
+    					<div class="text" style="background-color: #e3f0f8;">
+    						<h2 class="mb-0"><a href="{{ url_for('get_usuario_c', id_usuario=trayecto.conductor.id) }}">{{ trayecto.conductor.nombre.split(' ', 1)[0] }} {{ trayecto.conductor.apellidos|first }}.</a></h2>
+    						<div class="d-flex mb-3">
+                  {% set marcaCoche = trayecto.coche['marca'] if trayecto.coche else 'Vehículo inexistente' %}
+                  {% set modeloCoche = trayecto.coche['modelo'].split(' ', 1)[0] if trayecto.coche else '' %}
+	    						<span class="cat desbordamientoTexto"><i class="fas fa-car"></i> {{ marcaCoche }} {{ modeloCoche }} </span>
+	    						<p class="price ml-auto desbordamientoTexto">{{ trayecto.precio }}€<span style="color: rgba(0, 0, 0, 0.7);">/plaza</span></p>
+    						</div>
+    						<p class="d-flex mb-0 justify-content-center">
+                  <a href="{{ url_for('get_trayecto_c', id_trayecto=trayecto.id) }}" class="btn btn-primary py-2 mr-1">Más información</a>
+                </p>
+    					</div>
+    				</div>
+    			</div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>	
+
+
+    <section class="ftco-counter ftco-section img bg-light" id="section-counter">
+    	<div class="container">
+    		<div class="row justify-content-center">
+          <div class="col-md-1 col-lg-1 justify-content-center counter-wrap ftco-animate">
+            <div class="block-18">
+            
+            </div>
+          </div>
+          <div class="col-md-4 col-lg-4 justify-content-center counter-wrap ftco-animate">
+            <div class="block-18">
+              <div class="text text-border d-flex align-items-center">
+                <strong class="number" data-number="{{ numeroUsuarios }}">0</strong>
+                <span>Usuarios registrados</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 col-lg-4 justify-content-center counter-wrap ftco-animate">
+            <div class="block-18">
+              <div class="text text-border d-flex align-items-center">
+                <strong class="number" data-number="{{ numeroTrayectos }}">0</strong>
+                <span>Trayectos organizados</span>
+              </div>
+            </div>
+          </div>
+        </div>
+    	</div>
+    </section>	
+
+
+    <script>
+      document.getElementById('fechaFiltro').setAttribute("min", new Date().toISOString().split('T')[0]);
+    </script>
+    
+    {% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Mis chats{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+
+<div class="hero-wrap ftco-degree-bg" style="background-image: url('/static/images/chat.png');" data-stellar-background-ratio="0.5">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row no-gutters slider-text justify-content-start align-items-center justify-content-center">
+      <div class="col-lg-8 ftco-animate">
+        <div class="text w-100 text-center mb-md-6 pb-md-5">
+            <h1 class="mb-4 sombrita">Mis chats</h1>
+            <p class="sombrita2" style="font-size: 18px;">En esta sección puede mantener conversaciones con otros usuarios acerca de dudas en los trayectos publicados u otros temas de conversación.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+        <div class="row no-gutters">
+            <div class="col-md-12	featured-top">
+                <div class="row no-gutters">
+                    <div class="col-md-12 d-flex align-items-center">
+                        <div class="services-wrap2 rounded-right w-100">
+                            <h3 class="heading-section mb-2">¿Desea crear una nueva conversación?</h3>
+                            Para crear una conversación con otro usuario, debe ir al perfil de dicho usuario y seleccionar
+                            la opción de "Enviar Mensaje". Tras enviarle el primer mensaje, ya tendrá creada una conversación con dicho usuario.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+  </div>
+</section>
+<section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+        {% set id_usuario = {'id_usuario': ''} %}
+        {% if chats|length > 0 %}
+            {% for chat in chats %}
+                    <div class="services-wrap2 rounded-right w-100e ftco-animate">
+                        <div class="row">
+                            <div class="col-md-10 desbordamientoTexto">
+                                <h4>{% if chat["usuario1"]["_id"]|string == session["id"]|string %} <a href="{{ url_for('get_usuario_c', id_usuario=chat["usuario2"]["_id"]) }}">{{ chat["usuario2"]["nombre"] }} {{ chat["usuario2"]["apellidos"] }}</a> {% else %} <a href="{{ url_for('get_usuario_c', id_usuario=chat["usuario1"]["_id"]) }}">{{ chat["usuario1"]["nombre"] }} {{ chat["usuario1"]["apellidos"] }} </a>{% endif %}</h4>
+                                <i class="fas fa-envelope"></i> Último mensaje el día {{ chat["listaMensaje"][-1]["fecha"].strftime('%d/%m/%Y') }} a las {{ chat["listaMensaje"][-1]["fecha"].strftime('%H:%M') }} - {% if chat["listaMensaje"][-1]["emisor"]|string  == session["id"]|string %} Yo: {% elif chat["listaMensaje"][-1]["emisor"]|string == chat["usuario1"]["_id"]|string %} {{ chat["usuario1"]["nombre"] }} {{ chat["usuario1"]["apellidos"] | first }}: {% else %} {{ chat["usuario2"]["nombre"] }} {{ chat["usuario2"]["apellidos"] | first }}: {% endif %}  {{ chat["listaMensaje"][-1]["mensaje"] }}
+                            </div>
+                            {% if session['id']|string == chat["usuario1"]["_id"] %}
+                                {% if id_usuario.update({'id_usuario': chat["usuario1"]["_id"]|string}) %} {% endif %}
+                            {% else %}
+                                {% if id_usuario.update({'id_usuario': chat["usuario2"]["_id"]|string}) %} {% endif %}
+                            {% endif %}
+                            <div class="col-md-2 mt-35">
+                                <form action="{{ url_for('get_chat_c', id_usuario=id_usuario.id_usuario ,id_chat=chat["_id"]) }}" method="post">
+                                    <input type="submit" class="btn btn-primary" value="Ver chat">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <div class="line"></div>
+            {% endfor %}
+        {% else %}
+            <div class="row">
+                <div class="col-md-12">
+    				<div class="car-wrap rounded ftco-animate">
+                        <div class="text" style="background-color: #e3f0f8;">
+                            <p class="d-flex mb-0 mt-1 justify-content-center">
+                                <b>No dispone de ninguna conversación con otro usuario.</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        </div>
+</section>
+<section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-12 mt-5 heading-section text-center ftco-animate mb-2">
+        </div>
+      </div>
+    </div>
+</section>
+{% endblock %}

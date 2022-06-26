@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+{% block title %}Crear Trayecto{% endblock %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+{% endblock %}
+    
+{% block content %}
+    <div class="hero-wrap ftco-degree-bg" style="background-image: url('/static/images/creartrayecto.png');" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text justify-content-start align-items-center justify-content-center">
+          <div class="col-lg-8 ftco-animate">
+          	<div class="text w-100 text-center mb-md-6 pb-md-5">
+	            <h1 class="mb-4 sombrita">Cree un trayecto a medida</h1>
+	            <p class="sombrita2" style="font-size: 18px;">Rellene los siguientes campos para crear un trayecto y publicarlo en la aplicación.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form action="{{ url_for('crear_trayecto_c')}}" method="post" onsubmit="return comprobarUbicaciones();">
+     <section class="ftco-section ftco-no-pt bg-light">
+    	<div class="container">
+    		<div class="row no-gutters">
+    			<div class="col-md-12	featured-top">
+    				<div class="row no-gutters">
+	  					<div class="col-md-12 d-flex align-items-center">
+	  						<div class="services-wrap2 rounded-right w-100">
+	  							<h3 class="heading-section mb-3">Datos del trayecto a crear:</h3>
+                  <div class="row d-flex mb-3">
+                    <div class="col-md d-flex align-items-center ftco-animate">Para establecer las ubicaciones de origen y destino, puede realizarlo de dos formas distintas: seleccionando el punto deseado sobre el mapa, o introduciendo por teclado una dirección y pulsando el botón de búsqueda.</div>
+                  </div>
+                  <div class="row d-flex mb-4">
+					          <div class="col-md-6 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="text w-100">
+					                <h3 class="heading mb-3 detallesTexto"><i class="fas fa-map-marker-alt"></i><b> Origen</b></h3>
+                          <div id="mapaOrigen" class="mapa"></div>
+                          <div class="form-group mt-3 input-group">
+                            <input type="text" name="origen" id="origen" class="form-control" required style="font-size: 1em; text-align: center;" placeholder="Dirección de origen"/>
+                            &nbsp;
+                            <button type="button" id="botonBuscarOrigen" class="botonCito"><i class="fas fa-search-location" style="color: #1089ff;"></i></button>
+                            &nbsp;
+                            <button type="button" onClick="window.location.reload();" class="botonCito"><i class="fas fa-sync-alt" style="color: #1089ff;"></i></button>
+                            <input type="hidden" name="latitudOrigen" id="latitudOrigen"/>
+                            <input type="hidden" name="longitudOrigen" id="longitudOrigen"/>
+                            <input type="hidden" name="localidadOrigen" id="localidadOrigen"/>
+                          </div>
+				                </div>
+					            </div>      
+					          </div>
+                    <div class="col-md-6 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="text w-100">
+					                <h3 class="heading mb-3 detallesTexto"><i class="fas fa-flag"></i><b> Destino</b></h3>
+                          <div id="mapaDestino" class="mapa"></div>
+                          <div class="form-group mt-3 input-group">
+                            <input type="text" name="destino" id="destino" class="form-control" required style="font-size: 1em; text-align: center;" placeholder="Dirección de destino"/>
+                            &nbsp;
+                            <button type="button" id="botonBuscarDestino" class="botonCito"><i class="fas fa-search-location" style="color: #1089ff;"></i></button>
+                            &nbsp;
+                            <button type="button" onClick="window.location.reload();" class="botonCito"><i class="fas fa-sync-alt" style="color: #1089ff;"></i></button>
+                            <input type="hidden" name="latitudDestino" id="latitudDestino"/>
+                            <input type="hidden" name="longitudDestino" id="longitudDestino"/>
+                            <input type="hidden" name="localidadDestino" id="localidadDestino"/>
+                          </div>
+				                </div>
+					            </div>      
+					          </div>
+					        </div>
+
+                  <div class="row d-flex mb-4">
+                    <div class="col-md d-flex align-items-center ftco-animate">
+                      <hr style="width: 100%; border: 2px solid #e3f0f8;">
+                    </div>
+                  </div>
+
+	  							<div class="row d-flex mb-4">
+					          <div class="col-md-3 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="text w-100">
+					                <h3 class="heading mb-3 detallesTexto"><i class="far fa-calendar-alt"></i><b> Fecha</b></h3>
+                          <div class="form-group mt-3">
+                            <input type="date" name="fecha" id="fechaFiltro" class="form-control" value="{{ fFecha }}" required style="font-size: 1em; text-align: center;">
+                          </div>
+				                </div>
+					            </div>      
+					          </div>
+
+                    <div class="col-md-2 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="text w-100">
+					                <h3 class="heading mb-3 detallesTexto"><i class="fas fa-clock"></i></i><b> Hora</b></h3>
+                          <div class="form-group mt-3">
+                            <input type="time" name="hora" class="form-control" required style="font-size: 1em; text-align: center;"/>
+                          </div>
+				                </div>
+					            </div>      
+					          </div>
+
+                    <div class="col-md-2 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="text w-100">
+					                <h3 class="heading mb-3 detallesTexto"><i class="fas fa-flag"></i><b> Plazas</b></h3>
+                          <div class="form-group mt-3">
+                            <input type="number" name="plazasOfertadas" class="form-control" required min="1" placeholder="1" style="font-size: 1em; text-align: center;"/>
+                          </div>
+				                </div>
+					            </div>      
+					          </div>
+
+                    <div class="col-md-2 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="text w-100">
+					                <h3 class="heading mb-3 detallesTexto"><i class="fas fa-coins"></i><b> Precio (€)</b></h3>
+                          <div class="form-group mt-3">
+                            <input type="number" name="precio" class="form-control" required placeholder="1" step="any" min="0.1" style="font-size: 1em; text-align: center;"/>
+                          </div>
+				                </div>
+					            </div>      
+					          </div>
+
+                    <div class="col-md-3 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="text w-100">
+					                <h3 class="heading mb-3 detallesTexto"><i class="fas fa-redo-alt"></i><b> Periodicidad</b></h3>
+                          <div class="form-group mt-3">
+                            <input type="text" name="periodicidad" class="form-control" placeholder="Una vez al mes" style="font-size: 1em; text-align: center;"/>
+                          </div>
+				                </div>
+					            </div>      
+					          </div>
+					        </div>
+
+                  <div class="row d-flex mb-4">
+                    <div class="col-md-12 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="text w-100">
+					                <h3 class="heading mb-3 detallesTexto"><i class="fas fa-car"></i><b> Vehículo a utilizar en el trayecto</b></h3>
+                          <div class="form-group mt-3">
+                            <select name="coche" class="form-control selectcss" required="true">
+                              <option hidden selected>Seleccione vehículo</option>
+                              {% for coche in coches %}
+                              <option value="{{coche["_id"]}}"> {{ coche["marca"] }} {{ coche["modelo"] }} - Color: {{ coche["color"] }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+				                </div>
+					            </div>      
+					          </div>
+					        </div>
+
+                  <div class="row d-flex mb-4">
+                    <div class="col-md-12 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="text w-100">
+					                <h3 class="heading mb-3 detallesTexto"><i class="fas fa-info-circle"></i><b> Descripción</b></h3>
+                          <div class="form-group mt-3">
+                            <textarea type="text" name="descripcion" class="form-control" rows="2" required placeholder="En este viaje viene mi perro conmigo. Permito que traigan mascotas. Por favor, respeten la norma de no fumar en el coche durante el trayecto."  style="font-size: 1em; text-align: center;"></textarea>
+                          </div>
+				                </div>
+					            </div>      
+					          </div>
+					        </div>
+
+                  <div class="botonCentrado">
+                    <p><button type="submit" class="btn btn-primary py-3 px-4">Crear trayecto</button></p>
+                  </div>
+	  						</div>
+	  					</div>
+	  				</div>
+				</div>
+  		</div>
+    </section>
+  </form>
+
+
+    <section class="ftco-section ftco-no-pt bg-light">
+    	<div class="container">
+    		<div class="row justify-content-center">
+          <div class="col-md-12 mt-5 heading-section text-center ftco-animate mb-4">
+          </div>
+        </div>
+    </div>
+    </section>
+
+  <script>
+    function crearMapa (id_mapa, elemento, latitudIni, longitudIni, localidadHidden, latitudHidden, longitudHidden) {
+      if (latitudIni != null && longitudIni != null) {
+        var map = L.map(id_mapa).setView([latitudIni, longitudIni], 18);
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors</a>'
+          }).addTo(map);
+        var marker = L.marker([latitudIni, longitudIni]).addTo(map);
+        latitudHidden.value = latitudIni;
+        longitudHidden.value = longitudIni;
+      } else {
+        var map = L.map(id_mapa).locate({setView: true});
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors</a>'
+          }).addTo(map);
+        }
+        map.setZoom(1018);
+        var marker;
+        map.on('click', function (e) {
+        if (marker) {
+          map.removeLayer(marker);
+        }
+
+        marker = new L.marker(e.latlng).addTo(map);
+
+        var latlng = map.mouseEventToLatLng(e.originalEvent);
+        $.get('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+ latlng.lat +'&lon='+ latlng.lng +'', function(data){
+          if (data.error) {
+            elemento.value = "Dirección no encontrada";
+          } else {
+            elemento.value = data.display_name;
+            setearLocalidad(localidadHidden, data);
+            latitudHidden.value = latlng.lat;
+            longitudHidden.value = latlng.lng;
+            //alert(localidadHidden.value + " " + latitudHidden.value + " " + longitudHidden.value);
+          }
+          });
+        });
+      return map;
+    }
+
+    function setearLocalidad(elementoQueSeteo, datos) {
+      if (datos.address.city) {
+        elementoQueSeteo.value = datos.address.city;
+      } else if (datos.address.town) {
+        elementoQueSeteo.value = datos.address.town;
+      } else if (datos.address.village) {
+        elementoQueSeteo.value = datos.address.village;
+      } else if (datos.address.hamlet) {
+        elementoQueSeteo.value = datos.address.hamlet;
+      } else if (datos.address.suburb) {
+        elementoQueSeteo.value = datos.address.suburb;
+      } else {
+        elementoQueSeteo.value = "-";
+      }
+    }
+
+    
+    function buscarBoton(id_mapa, elemento, mapa, botonBuscar, localidadHidden, latitudHidden, longitudHidden) {
+      var datos;
+      var boton = botonBuscar;
+      boton.onclick = function() {
+        var direccion = elemento.value;
+        $.get(location.protocol + '//nominatim.openstreetmap.org/search?format=json&q='+direccion, function(data){
+          if (data.length == 0) {
+            elemento.value = "Dirección no encontrada";
+          } else {
+            var direccionCompleta = data[0].display_name;
+            var latitud = data[0].lat;
+            var longitud = data[0].lon;
+            //console.log(data[0]);
+            if (elemento.readOnly === false) {
+              mapa.remove();
+              $.get('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+ latitud +'&lon='+ longitud +'', function(datos){
+              setearLocalidad(localidadHidden, datos);
+              //alert(localidadHidden.value + " " + latitud + " " + longitud);
+
+          });
+              crearMapa(id_mapa, elemento, latitud, longitud, localidadHidden, latitudHidden, longitudHidden);
+              boton.disabled = true;
+              boton.style.opacity = 0.3;
+              elemento.value = direccionCompleta;
+              elemento.readOnly = true;
+              elemento.blur();
+            }
+          }
+          ;});
+    };
+    }
+
+    /*function buscarTextualmenteBoton(id_mapa, elemento, mapa) {
+      var direccion = elemento.value;
+        $.get(location.protocol + '//nominatim.openstreetmap.org/search?format=json&q='+direccion, function(data){
+          if (data.length == 0) {
+            elemento.value = "Dirección no encontrada";
+          } else {
+            var direccionCompleta = data[0].display_name;
+            var latitud = data[0].lat;
+            var longitud = data[0].lon;
+            elemento.value = direccionCompleta;
+            elemento.readOnly = true;
+            mapa.remove();
+            crearMapa(id_mapa, elemento, latitud, longitud);
+            document.getElementById('botonBuscar').disabled = true;
+            document.getElementById('botonBuscar').style.opacity = 0.3;
+          }
+          ;});
+    }*/
+
+    const origen = document.getElementById("origen");
+    const botonBuscarOrigen = document.getElementById("botonBuscarOrigen");
+    const localidadOrigen = document.getElementById("localidadOrigen");
+    const latitudOrigen = document.getElementById("latitudOrigen");
+    const longitudOrigen = document.getElementById("longitudOrigen");
+    mapaOrigen = crearMapa('mapaOrigen', origen, null, null, localidadOrigen, latitudOrigen, longitudOrigen);
+    buscarBoton('mapaOrigen', origen, mapaOrigen, botonBuscarOrigen, localidadOrigen, latitudOrigen, longitudOrigen);
+
+
+    const destino = document.getElementById("destino");
+    const botonBuscarDestino = document.getElementById("botonBuscarDestino");
+    const localidadDestino = document.getElementById("localidadDestino");
+    const latitudDestino = document.getElementById("latitudDestino");
+    const longitudDestino = document.getElementById("longitudDestino");
+    mapaDestino = crearMapa('mapaDestino', destino, null, null, localidadDestino, latitudDestino, longitudDestino);
+    buscarBoton('mapaDestino', destino, mapaDestino, botonBuscarDestino, localidadDestino, latitudDestino, longitudDestino);
+
+
+    function comprobarUbicaciones() {
+      if (origen.value == "Dirección no encontrada" || destino.value == "Dirección no encontrada") {
+        alert("No puede crear un trayecto si no se han ubicado correctamente alguna de las direcciones de origen o destino.");
+        return false;
+      }
+    }
+
+
+    document.getElementById('fechaFiltro').setAttribute("min", new Date().toISOString().split('T')[0]);
+
+    window.addEventListener('keydown',function(e){if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13){if(e.target.nodeName=='INPUT'&&e.target.type=='text'){e.preventDefault();return false;}}},true);
+
+
+  </script>
+{% endblock %}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <input type="number" id="plazas" min="1" value="" placeholder="Número de plazas" /><br/>
+    <input type="text" id="precio" value="" placeholder="Precio por plaza"><br/>
+    <div id="paypal-button"></div>
+    
+
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+<script>
+    var host = window.location.hostname;
+
+    //var CREATE_PAYMENT_URL  = host + '/app/create-payment';
+    //var EXECUTE_PAYMENT_URL = host + '/app/execute-payment';
+
+    var CREATE_PAYMENT_URL  = 'http://127.0.0.1:5000/app/create-payment';
+    var EXECUTE_PAYMENT_URL = 'http://127.0.0.1:5000/app/execute-payment';
+
+    paypal.Button.render({
+
+        env: 'sandbox', // Or 'production'
+
+        commit: true, // Show a 'Pay Now' button
+
+        payment: function() {
+            var prize = document.getElementById('precio').value;
+            var nplaza = document.getElementById('plazas').value;
+            return paypal.request.post(CREATE_PAYMENT_URL, {
+                precio: prize, 
+                plazas: nplaza
+            }).then(function(data) {
+                return data.paymentID;
+            });
+        },
+
+        onAuthorize: function(data) {
+            return paypal.request.post(EXECUTE_PAYMENT_URL, {
+                paymentID: data.paymentID,
+                payerID:   data.payerID
+            }).then(function(res) {
+
+                //console.log(res.success)
+                // The payment is complete!
+                // You can now show a confirmation message to the customer
+            });
+        }
+
+    }, '#paypal-button');
+</script>
+</body>
+</html>
