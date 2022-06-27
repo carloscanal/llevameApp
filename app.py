@@ -30,25 +30,30 @@ import pandas as pd
 
 import paypalrestsdk
 
+# app desplegada en Heroku llevame-app.herokuapp.com
+
 app = Flask(__name__)
 
-#app.config['MONGO_URI'] = 'mongodb+srv://lorenzo:lorenzo@clusterweb.yupg4.mongodb.net/iweb?retryWrites=true&w=majority'
+# app.config['MONGO_URI'] = 'mongodb+srv://lorenzo:lorenzo@clusterweb.yupg4.mongodb.net/iweb?retryWrites=true&w=majority'
 app.config['MONGO_URI'] = 'mongodb+srv://canal:canal@cluster0.vodgj.mongodb.net/LlevameApp?retryWrites=true&w=majority'
 
 mongo = PyMongo(app)
 app.secret_key = 'sadffasfsadc xiyufevbsdasdvfssazd'
 
 cloudinary.config(
-  cloud_name = "dkwgmat62",
-  api_key = "926419554464644",
-  api_secret = "J8bH4s76DPOypvt89Ev7FgVrtQc"
+  # cloud_name = "dkwgmat62",     
+  cloud_name = "carloscanal",
+  # api_key = "926419554464644",   
+  api_key = "135162366337385",
+  # api_secret = "J8bH4s76DPOypvt89Ev7FgVrtQc"
+  api_secret = "oJado889ciYY1pExpa5xzOrjaio"
 )
 
 oauth = OAuth(app)
 google = oauth.register(
     name='google',
     # client_id='884325304780-tu9b97m07oed9dsvu61gv4lhq3k85905.apps.googleusercontent.com',
-    client_id='853416967262-2tj4veftl34oseq1jrir94lru2pstb6a.apps.googleusercontent.com',
+    client_id='853416967262-2tj4veftl34oseq1jrir94lru2pstb6a.apps.googleusercontent.com',   # canal.lcc.uma.es@mail.com, misAnunciosWebApp
     # client_secret='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',
     client_secret='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',
     access_token_url='https://accounts.google.com/o/oauth2/token',
