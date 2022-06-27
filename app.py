@@ -42,11 +42,11 @@ app.secret_key = 'sadffasfsadc xiyufevbsdasdvfssazd'
 
 cloudinary.config(
   # cloud_name = "dkwgmat62",     
-  cloud_name = "carloscanal",
+  cloud_name = "canallcc",
   # api_key = "926419554464644",   
-  api_key = "135162366337385",
+  api_key = "457779831621397",
   # api_secret = "J8bH4s76DPOypvt89Ev7FgVrtQc"
-  api_secret = "oJado889ciYY1pExpa5xzOrjaio"
+  api_secret = "OCi5Y1KI3ieR5PufEp-bMfO3mv0"
 )
 
 oauth = OAuth(app)
