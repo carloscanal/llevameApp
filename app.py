@@ -71,8 +71,11 @@ KEY_TIEMPO = "ae4a89ce4a477001dcf4ea5eac7c64d8"
 
 paypalrestsdk.configure({
   "mode": "sandbox", # sandbox or live
-  "client_id": "AWP2ahcvOuOb1gvPSciS8JGITE9Tv69g7wyCEljo-bRy6QM9fFR5TIKxQ37hJdOal_NcKdnWDOKML547",
-  "client_secret": "ENTsuwzsiBrKOGTq9iHokd57zhs18UU2F-2JXqIPAqvcjckOnUjl2Wo9vMsXVCyR_dXPs4pQ9lXZmKsy" })
+  # "client_id": "AWP2ahcvOuOb1gvPSciS8JGITE9Tv69g7wyCEljo-bRy6QM9fFR5TIKxQ37hJdOal_NcKdnWDOKML547",
+  "client_id": "Abh4GvF6wzQ_4uCAdXmXqYwd1QryRYRox50HXGJWUFR8nqKEnMwf82UqH_W_zXB7bu_kKng88uicXim9",
+  # "client_secret": "ENTsuwzsiBrKOGTq9iHokd57zhs18UU2F-2JXqIPAqvcjckOnUjl2Wo9vMsXVCyR_dXPs4pQ9lXZmKsy"
+  "client_secret": "EJ34OHQxNs_CoCFw--1CHgjYD7_KcIBxOdyCgCGXEt1TbHgh4HYPMrp7MacbkYNBLWjXFtjxQhbGENLt"
+  })
 
 
 def crear_usuario_aux(nombre, apellidos, correo, foto, des, admin):
