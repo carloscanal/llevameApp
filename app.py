@@ -65,7 +65,8 @@ google = oauth.register(
     client_kwargs={'scope': 'openid email profile'},
 )
 
-KEY_TIEMPO = "89a43901d7f1827633ddf6e56989ea90"
+# KEY_TIEMPO = "89a43901d7f1827633ddf6e56989ea90"
+KEY_TIEMPO = "ae4a89ce4a477001dcf4ea5eac7c64d8"
 
 
 paypalrestsdk.configure({
