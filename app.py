@@ -35,7 +35,12 @@ import paypalrestsdk
 app = Flask(__name__)
 
 # app.config['MONGO_URI'] = 'mongodb+srv://lorenzo:lorenzo@clusterweb.yupg4.mongodb.net/iweb?retryWrites=true&w=majority'
+
+# BD en MongoDB Atlas
 app.config['MONGO_URI'] = 'mongodb+srv://canal:canal@cluster0.vodgj.mongodb.net/LlevameApp?retryWrites=true&w=majority'
+
+# BD Mongo local
+# app.config['MONGO_URI'] = 'mongodb://localhost/LlevameApp?retryWrites=true&w=majority'
 
 mongo = PyMongo(app)
 app.secret_key = 'sadffasfsadc xiyufevbsdasdvfssazd'

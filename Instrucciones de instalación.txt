@@ -1,0 +1,80 @@
+﻿
+0) Desplegado en Heroku, con BD en MongoDB Atlas
+
+	https://llevame-app.herokuapp.com/
+
+A) Para ejecutar la app en local (con DB en MongoDB Atlas) necesitaréis tener instalados los siguientes componentes:
+
+* Python 3 (https://www.python.org/downloads/). Comprobad después que tenéis acceso a Python abriendo una ventana del sistema y ejecutando "python". Si no funciona, añadid al path la carpeta de instalación (típicamente C:\Python310 ).
+
+	  set PATH=%PATH%;C:\Python310
+
+* Heroku CLI (https://devcenter.heroku.com/articles/heroku-cli/), la interfaz de línea de comandos de Heroku. Comprobad después la instalación abriendo una ventana del sistema y ejecutando "heroku". Si no funciona, añadid al path la carpeta \bin de la instalación (típicamente C:\Program Files\heroku\bin ). Como vamos a trabajar en local, por el momento no es necesario que creéis una cuenta en Heroku.com
+
+	set PATH=%PATH%;C:\Program Files\heroku\bin
+
+
+A) Para ejecutar la app en local (con DB en MongoDB Atlas)
+
+   1) Abrir una ventana CMD ***como administrador*** e ir a la carpeta del proyecto
+
+   2) Instalar requisitos Python
+
+	pip install -r requirements.txt
+
+	Si no se hace en modo Adminsitrador:
+
+	ERROR: Could not install packages due to an OSError: [WinError 2] El sistema no puede encontrar el archivo especificado: 
+
+	'C:\\Python310\\Scripts\\pyrsa-decrypt.exe' -> 'C:\\Python310\\Scripts\\pyrsa-decrypt.exe.deleteme'
+
+    3) Da un problema de proxy para acceder a la DB
+
+    En una ventana del sistema (cmd) con privilegios de administrador (con Powershell no he probado), hay que indicar cuál es el proxy que se utiliza en los laboratorios, asignando dos variables de entorno:
+
+    set http_proxy=http://proxy.lcc.uma.es:3128
+    set https_proxy=http://proxy.lcc.uma.es:3128
+
+    (mirar si ya estan por defecto)
+
+    Si se utiliza un entorno virtual (venv) hay que ejecutar estas dos instrucciones después de activar el entorno (activate).
+
+    Con esto ya se pueden instalar paquetes tanto con pip como con npm en los ordenadores del laboratorio.
+	- PERO DE ESTE MODO no está accesible el puerto de MONGODB ATLAS, incluso en local
+        - no hay problema si esto se usa solo para instalar y se usa otra ventana sin proxy para ejecutar 
+	  o se eliminan las variables de entorno
+
+	- ver variables de entorno en Instrucciones MongoDB.txt (3.4.1)
+
+   4) Ejecutar en modo local
+
+	heroku local web -f Procfile.windows
+
+	Tarda un rato la primera vez (o es por el pen?) copiar al disco para ver si es más rápido
+
+
+B) Para ejecutar con BD local
+
+   1) Instalar MongoDB
+
+	* MongoDB (https://www.mongodb.com/try/download). 
+
+	    * añadimos al path \bin de la instalación de MongoDB -- no hace falta, creo
+
+  	      set PATH=%PATH%;C:\Program Files\MongoDB\Server\6.0\bin
+
+	* mongosh (https://www.mongodb.com/try/download/shell?jmp=docs), el shell de MongoDB (mongo está deprecated como shell y quedaria solo como el servidor para usar en local)
+
+ 	      -- no haría falta si solo voy a acceder desde programa
+
+	    * añadimos al path \bin de la instalación de Mongo shell 
+
+	      set PATH=%PATH%;C:\Program Files\MongoDB\mongosh-1.6.0-win32-x64\bin
+
+    2) Modificar en main.py la conexión a la base de datos (descomentando la línea 43)
+
+    3) Ejecutar en modo local
+
+	heroku local web -f Procfile.windows
+
+
