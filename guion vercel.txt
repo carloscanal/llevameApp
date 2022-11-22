@@ -26,3 +26,23 @@ porque pip no se llama 3.9
 
 copio pip3.10 de c:/Python310/Scripts como pip3.9
 
+ahora sí hace el build local
+
+como lo ejecuto?
+
+vercel deploy parece que lo sube a la nube
+
+vercel dev lo ejecuta en local (despliega en 3000)
+
+Pongo otra vez todas las dependencias en requirements 
+
+Y tb en local da error aunque ahroa dice (51.58mb)
+
+Quito Paypal para probar
+
+Pero da el mismo tamaño
+
+Habrá que ver qué se puede quitar
+
+
+
