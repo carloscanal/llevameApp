@@ -21,4 +21,4 @@ geocoder
 paypalrestsdk
 pandas
 geopy
-gunicorn
+# gunicorn  #  solo para ejecucion local con Heroku
