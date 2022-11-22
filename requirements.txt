@@ -18,7 +18,7 @@ Authlib==0.15.5
 ghp-import==2.0.2
 google==3.0.0
 geocoder
-paypalrestsdk
+# paypalrestsdk
 pandas
 geopy
 # gunicorn  #  solo para ejecucion local con Heroku
