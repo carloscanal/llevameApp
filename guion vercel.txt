@@ -1,0 +1,28 @@
+
+
+Para instalar Vercel CLI
+
+npm i -g vercel
+
+Para desplegar en local
+
+vercel build
+
+Pra desplegar en poduccion
+
+vercel build --prod
+
+Pasos
+
+vercel login
+
+vercel pull # trae los settings del proyecto de la nube
+
+vercel build
+
+Per da un error: Failed to run "pip3.9 install --disable-pip-version-check --target . werkzeug==1.0.1"
+
+porque pip no se llama 3.9
+
+copio pip3.10 de c:/Python310/Scripts como pip3.9
+
